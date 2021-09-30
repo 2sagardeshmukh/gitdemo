@@ -1,0 +1,275 @@
+//Collection Book Store Demo
+
+//pom.xml
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+
+    <groupId>org.th.B84</groupId>
+    <artifactId>CollectionBookStoreDemo</artifactId>
+    <version>1.0-SNAPSHOT</version>
+    <build>
+        <plugins>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-compiler-plugin</artifactId>
+                <configuration>
+                    <source>16</source>
+                    <target>16</target>
+                </configuration>
+            </plugin>
+        </plugins>
+    </build>
+
+    <properties>
+        <maven.compiler.source>17</maven.compiler.source>
+        <maven.compiler.target>17</maven.compiler.target>
+    </properties>
+
+</project>
+
+
+//Book.java Class(Under model package)
+package model;
+
+public class Book {
+    private int bookId;
+    private String bookName;
+    private int bookPrice;
+
+    public Book(int bookId, String bookName, int bookPrice) {
+        this.bookId = bookId;
+        this.bookName = bookName;
+        this.bookPrice = bookPrice;
+    }
+
+    public int getBookId() {
+        return bookId;
+    }
+
+    public String getBookName() {
+        return bookName;
+    }
+
+    public int getBookPrice() {
+        return bookPrice;
+    }
+
+    public void setBookPrice(int bookPrice) {
+        this.bookPrice = bookPrice;
+    }
+
+    @Override
+    public String toString() {
+        return "Book{" +
+                "bookId=" + bookId +
+                ", bookName='" + bookName + '\'' +
+                ", bookPrice=" + bookPrice +
+                '}';
+    }
+}
+
+//BookOperarationsInterface (under bookop package)
+package bookop;
+
+import model.Book;
+
+import java.util.ArrayList;
+
+public interface BookOperations {
+
+   String addABook(Book book);
+   ArrayList<Book> getAllBooks();
+   Book getABook(int bookId);
+   String setBookPrice(int bookId,int ipPrice);
+}
+
+//BookOperationImpl Class (under bookop package)
+package bookop;
+
+import model.Book;
+
+import java.util.ArrayList;
+
+public class BookOperationImpl implements BookOperations{
+   private ArrayList<Book> blist = new ArrayList<Book>();
+
+
+
+
+    @Override
+    public String addABook(Book book) {
+        blist.add(book);
+        return("Book added Successfully");
+    }
+
+    @Override
+    public ArrayList<Book> getAllBooks() {
+        return blist;
+    }
+
+    @Override
+    public Book getABook(int bookId) {
+        for (Book book:blist)
+        {
+            if(book.getBookId()==bookId)
+                return book;
+        }
+        return null;
+    }
+
+    @Override
+    public String setBookPrice(int bookId, int ipPrice) {
+       Book book = getABook(bookId);
+       book.setBookPrice(ipPrice);
+       return("Book price updated successsfullly");
+   }
+}
+
+
+//BookStoreMain Class (under mainUI package)
+package mainUIpack;
+
+import bookop.BookOperationImpl;
+import bookop.BookOperations;
+import model.Book;
+
+import java.util.ArrayList;
+import java.util.Scanner;
+
+import static java.lang.System.exit;
+
+public class BookStoreMain {
+
+    public static void main(String[] args)
+    {
+        Scanner sc = new Scanner(System.in);
+        BookOperationImpl boi = new BookOperationImpl();
+
+        while(true)
+        {
+            System.out.println("1. Add a Book");
+            System.out.println("2. list all the  Book");
+            System.out.println("3. get a Book");
+            System.out.println("4. update a Book price");
+            System.out.println("5. Exit");
+
+            System.out.println("Enter your choice");
+            int choice = sc.nextInt();
+
+            switch(choice)
+            {
+                case 1:
+                {
+                    System.out.println("enter the details of the book");
+                    int bookId = sc.nextInt();
+                    String bookName = sc.next();
+                    int bookPrice = sc.nextInt();
+                    Book book = new Book(bookId,bookName,bookPrice);
+                    System.out.println(boi.addABook(book));
+                    break;
+                }
+
+                case 2:
+                {
+                    ArrayList<Book> blist = boi.getAllBooks();
+                    for(Book book:blist)
+                    {
+                        System.out.println(book);
+                    }
+                    break;
+                }
+
+                case 3:
+                {
+                    System.out.println("enter the book id to be search");
+                    int bookId = sc.nextInt();
+                    Book book = boi.getABook(bookId);
+                    if(book != null)
+                        System.out.println(book);
+                    else
+                        System.out.println("Book does not found in the store");
+                    break;
+                }
+                case 4:
+                {
+                    System.out.println("enter the book id");
+                    int bookId = sc.nextInt();
+                    System.out.println("enter the updated price of the book");
+                    int upPrice = sc.nextInt();
+                    System.out.println(boi.setBookPrice(bookId,upPrice));
+                    break;
+                }
+                default:
+                    sc.close();
+                    System.out.println("bye Bye");
+                    System.exit(0);
+            }
+
+        }
+    }
+}
+
+
+
+output:
+1. Add a Book
+2. list all the  Book
+3. get a Book
+4. update a Book price
+5. Exit
+Enter your choice
+1
+enter the details of the book
+23
+java
+300
+Book added Successfully
+1. Add a Book
+2. list all the  Book
+3. get a Book
+4. update a Book price
+5. Exit
+Enter your choice
+2
+Book{bookId=23, bookName='java', bookPrice=300}
+1. Add a Book
+2. list all the  Book
+3. get a Book
+4. update a Book price
+5. Exit
+Enter your choice
+2
+Book{bookId=23, bookName='java', bookPrice=300}
+1. Add a Book
+2. list all the  Book
+3. get a Book
+4. update a Book price
+5. Exit
+Enter your choice
+3
+enter the book id to be search
+23
+Book{bookId=23, bookName='java', bookPrice=300}
+1. Add a Book
+2. list all the  Book
+3. get a Book
+4. update a Book price
+5. Exit
+Enter your choice
+4
+enter the book id
+23
+enter the updated price of the book
+400
+Book price updated successsfullly
+1. Add a Book
+2. list all the  Book
+3. get a Book
+4. update a Book price
+5. Exit
+Enter your choice
+5
+bye Bye
